@@ -1,6 +1,5 @@
 from mycroft import MycroftSkill, intent_file_handler
 import sqlite3
-from sqlite3 import error
 import random 
 
 class CreateAccount(MycroftSkill):
@@ -49,7 +48,7 @@ class CreateAccount(MycroftSkill):
             if confirm == "yes":
                 cur.execute("INSERT INTO Customer(CustomerID,SavedPaymentInfo, Name, Balance) VALUES(?,?,?)", (userid, NULL, name, 0))
                 self.speak("Your account has been created. Thank you!") #might change this
-                break
+                return
             elif confirm == "no":
                 self.speak("Okay. Let's try with your information again")
                 #NOTE this is just a placeholder, might make it more complex later on and rather than having the user say everything be specific for which thing is wrong
