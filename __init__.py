@@ -39,10 +39,11 @@ class CreateAccount(MycroftSkill):
                 if (customer != None):
                     taken = 0
 
+            convertid = str(userid).replace("", " ")
+            self.speak("Your user I.D. is {}.".format(convertid))
+            
 
-            self.speak("Your user I.D. is {}.".format(userid))
-
-            self.speak("A new account will be created with the following information: Name: {}, User I.D.: {}".format(name,userid))
+            self.speak("A new account will be created with the following information: Name: {}, User I.D.: {}".format(name,convertid))
             confirm = self.ask_yesno("Is this information correct? Please say yes or no.")
 
             if confirm == "yes":
