@@ -47,7 +47,7 @@ class CreateAccount(MycroftSkill):
             confirm = self.ask_yesno("Is this information correct? Please say yes or no.")
 
             if confirm == "yes":
-                cur.execute("INSERT INTO Customer(CustomerID, Name, Balance) VALUES(?,?,?)", (userid, name, 0))
+                cur.execute("INSERT INTO Customer(CustomerID, Name, Balance) VALUES(?,?,?)", (userid, name, 0,))
                 conn.commit()
                 self.speak("Your account has been created. Thank you!") #might change this
                 return
