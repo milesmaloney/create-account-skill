@@ -36,7 +36,7 @@ class CreateAccount(MycroftSkill):
                 cur.execute("SELECT * FROM Customer WHERE CustomerID = ?", (userid,))
                 customer = cur.fetchone()
 
-                if (customer != None):
+                if (customer == None):
                     taken = 0
 
             convertid = str(userid).replace("", " ")
