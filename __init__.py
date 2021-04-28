@@ -1,5 +1,6 @@
 from mycroft import MycroftSkill, intent_file_handler
-#do we need the database here too?
+import sqlite3
+from sqlite3 import error
 import random 
 
 class CreateAccount(MycroftSkill):
@@ -8,19 +9,45 @@ class CreateAccount(MycroftSkill):
 
     @intent_file_handler('account.create.intent')
     def handle_account_create(self, message):
+        conn = sqlite3.connect("cubic.sql") 
+        cur = conn.cursor()
+
         self.speak("Let's create an account. Please provide your information.")
+
         confirm = "no"
+
         while confirm == "no":
             user_name = self.get_response("What is your first name?")
+
             #TODO ask for middle name?
+            
             last_name = self.get_response("What is your last name?")
+
+            name = user_name + " " + last_name
+            
             #other information suggestions: preferred station, regular modes of transport, most frequent routes?
+            
             self.speak("Creating customer I.D., hold on....")
-            userid = random.randint(1,9999999999) #probably will change this range later
+
+            userid = 0
+            taken = 1
+            while(taken == 1):
+                userid = random.randint(1,999999)
+
+                cur.execute("SELECT * FROM Customer WHERE CustomerID = ?", (userid,))
+                customer = cur.fetchone()
+
+                if (customer != None):
+                    taken = 0
+
+
             self.speak("Your user I.D. is {}.".format(userid))
-            self.speak("A new account will be created with the following information: Name: {}, Last Name: {}, User I.D.: {}".format(user_name,last_name,userid))
-            confirm = self.get_response("Confirm if this information is correct, please say yes or no.")
+
+            self.speak("A new account will be created with the following information: Name: {}, User I.D.: {}".format(name,userid))
+            confirm = self.ask_yesno("Is this information correct? Please say yes or no.")
+
             if confirm == "yes":
+                cur.execute("INSERT INTO Customer(CustomerID,SavedPaymentInfo, Name, Balance) VALUES(?,?,?)", (userid, NULL, name, 0))
                 self.speak("Your account has been created. Thank you!") #might change this
                 break
             elif confirm == "no":
