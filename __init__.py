@@ -23,7 +23,7 @@ class CreateAccount(MycroftSkill):
             name = user_name + " " + last_name
             
             phone = self.get_response("What is your phone number?")
-            dbphone = int(phone)
+            dbphone = int(phone.replace("-", ""))
 
             self.speak("Creating customer I.D., hold on....")
 
