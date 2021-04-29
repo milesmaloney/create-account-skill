@@ -17,15 +17,14 @@ class CreateAccount(MycroftSkill):
 
         while confirm == "no":
             user_name = self.get_response("What is your first name?")
-
-            #TODO ask for middle name?
             
             last_name = self.get_response("What is your last name?")
 
             name = user_name + " " + last_name
             
-            #other information suggestions: preferred station, regular modes of transport, most frequent routes?
-            
+            phone = self.get_response("What is your phone number?")
+            dbphone = int(phone)
+
             self.speak("Creating customer I.D., hold on....")
 
             userid = 0
@@ -43,26 +42,18 @@ class CreateAccount(MycroftSkill):
             self.speak("Your user I.D. is {}.".format(convertid))
             
 
-            self.speak("A new account will be created with the following information: Name: {}, User I.D.: {}".format(name,convertid))
+            self.speak("A new account will be created with the following information: Name: {}, Phone Number: {}, User I.D.: {}".format(name,phone,convertid))
             confirm = self.ask_yesno("Is this information correct? Please say yes or no.")
 
             if confirm == "yes":
-                cur.execute("INSERT INTO Customer(CustomerID, Name, Balance) VALUES(?,?,?)", (userid, name, 0,))
+                cur.execute("INSERT INTO Customer(CustomerID, Name, Balance, PhoneNo) VALUES(?,?,?,?)", (userid, name, 0, dbphone))
                 conn.commit()
-                self.speak("Your account has been created. Thank you!") #might change this
+                self.speak("Your account has been created. Thank you!") 
                 return
             elif confirm == "no":
                 self.speak("Okay. Let's try with your information again")
-                #NOTE this is just a placeholder, might make it more complex later on and rather than having the user say everything be specific for which thing is wrong
-            
-            #NOTE the below code is for error checking, might make it too complex though
-            #else:
-                #self.speak("Sorry, I didn't get that. Could you repeat that again?")
-
-            #TODO if need there be add the customer to the database
-
+    
         conn.close()
-        #self.speak_dialog('account.create')
 
 
 def create_skill():
